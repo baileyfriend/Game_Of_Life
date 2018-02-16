@@ -2,7 +2,7 @@
     Bailey Freund
     CIS 343 02 
     Professor Woodring
-    2/12/18
+    2/16/18
 */
 
 
@@ -39,6 +39,7 @@ int main(int argc,char* argv[]) {
     char **board = (char **)malloc(num_rows*sizeof(char*));
     create_board(board, num_rows, num_cols);
     printf("board created \n");
+
     // populate initial board
     int r = 0;
     int c = 0;
@@ -72,21 +73,22 @@ int main(int argc,char* argv[]) {
             write_file( file, board, num_rows, num_cols );
 
         } else if( strcmp(input, "load\n\0") == 0 ){
-            char *filename = "some_file.txt\0";
-            //printf("What file (must be in this directory)? \n"); // @TODO implement load function
-            //fgets(filename, 50, stdin);
-            //char **data = 
-            read_file(filename, board);
-            print_board(board, num_rows, num_cols);
-            
+            char *filename = "some_file.txt\0"; // must have \0 at end of filename
+            char *buffer;
 
-            
+            read_file(filename, &buffer);
+            printf("successfully read file \n");
+
+            populate_board(board, buffer, num_rows, num_cols);
+            printf("Successfully populated board");
+            print_board(board, num_rows, num_cols);
+
         } else if( strcmp(input, "continue\n\0") == 0 ){
-            printf("Continuing to next generation\n"); //@TODO implement continue function - must evaluate rules
+            printf("Continuing to next generation... \n"); //@TODO implement continue function - must evaluate rules
             continue_board(board, num_rows, num_cols);
         } else if( strcmp(input, "exit\n\0") == 0 ){
             printf("EXITING PROGRAM");
-            free_board(board, num_rows);
+            free_board(board, num_rows); // free the memory before exiting to prevent memory leak
             return 0;
         } else
             printf("Invalid command. Please enter save, load, or continue. \n");
@@ -145,6 +147,12 @@ int free_board(char **board, int num_rows){
     return 0;
 }
 
+/*
+    Prints the board.
+    @param board the board to print
+    @param num_rows the number of rows in the board
+    @param num_cols the number of cols in the board
+*/
 int print_board(char **board, int num_rows, int num_cols) {
     int r = 0;
     int c = 0;
@@ -157,19 +165,20 @@ int print_board(char **board, int num_rows, int num_cols) {
     }
     return 0;
 }
-
+/*
+    Evaluates each cell and continues to next generation (starting at top left)
+    @param board the board to populate
+    @param num_rows the number of rows in the board
+    @param num_cols the number of cols in the board
+*/
 int continue_board(char **board, int num_rows, int num_cols){
     int r = 0;
     int c = 0;
     int count = 0;
-    printf("BOARD: \n");
     for ( r = 0; r < num_rows; r++){
-        printf("outer loop \n");
         for ( c = 0; c < num_cols; c++){
-            printf("inner loop \n");
             count = 0;
             if( r - 1 >= 0 ) { // check if there is a row above current
-                printf("1st if \n");
                 if( board[r-1][c] != DEAD ) count ++; // check above
                 if( c - 1 >= 0 ) { // check if there's a column to the left
                     if( board[r-1][c-1] != DEAD ) count ++; // check above left
@@ -178,13 +187,10 @@ int continue_board(char **board, int num_rows, int num_cols){
             }
             
             if( r + 1 < num_rows ) { // check if there is a row above current
-                printf("2nd if \n");
                 if( board[r+1][c] != DEAD ) count ++; // check below
                 if( c + 1 < num_cols ) { // check if there's a column to the right
-                    printf("2.1 if \n");
                     if( board[r+1][c+1] != DEAD ) count ++; // check below right
                     if( board[r][c+1] != DEAD ) count ++; // check below
-                    printf("after 2.1 eval \n");
                 }
             }
 

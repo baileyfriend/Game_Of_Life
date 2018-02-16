@@ -9,7 +9,7 @@ int read_file( char* filename, char **buffer ){
     FILE *f;
     f = fopen(filename, "r");
     if(f == NULL)
-	printf("CAN'T READ FILE!\n\n");
+	    printf("CAN'T READ FILE!\n\n");
     printf("File opened\n");
     // https://stackoverflow.com/questions/238603/how-can-i-get-a-files-size-in-c
     fseek(f, 0L, SEEK_END); // seek to end of file 
@@ -22,31 +22,29 @@ int read_file( char* filename, char **buffer ){
     //int size = st.st_size;
     //printf("size %i \n", size);
 
-    char *file_str = (char *)malloc( size * sizeof(char) );
     
-    fread(file_str, size, 1, f);
-    printf("Created file string:\n %s\n", file_str);
+    *buffer = (char *)malloc(size);
+    fread(buffer, size, 1, f);
+    //printf("Created file string:\n %s\n", *buffer);
     printf("put file into string \n");
 
 
-    char *token;
+    // char *token;
 
-    token = strtok(file_str, ",");
-    printf("began tokenization \n");
-    int r = 0;
-    buffer[r] = token;
-    printf("put token into buf: %s \n", token);
-    while (token != NULL){
-        printf("tokenizing... \n");
-        token = strtok(file_str, ",");
-        //buffer[i] = (char *)malloc(strlen(token));
-        buffer[r] = token;
-        printf("%s \n", buffer[r]);
-        r++;
-    }
+    // token = strtok(buffer, "\n");
+    // printf("began tokenization \n");
+    // int r = 1;
+    // buffer[0] = token; //
+    // printf("put token into buf: %s \n", token);
+    // while (token != NULL){
+    //     printf("tokenizing... \n");
+    //     token = strtok(buffer, "\n");
+    //     buffer[r] = (char *)malloc(strlen(token));
+    //     buffer[r] = token;
+    //     printf("%s \n", buffer[r]);
+    //     r++;
+    // }
 
-
-    free(file_str);
     return 0;
 
 }
@@ -71,7 +69,7 @@ int write_file( char* filename, char **buffer, int rows, int cols){
             printf( "%c", buffer[i][j] );
             fputc(buffer[i][j], f);
         }  
-        fputc(',',f);
+        fputc('\n',f);
     }
     
     
