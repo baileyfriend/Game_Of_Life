@@ -7,22 +7,24 @@
 int read_file( char* filename, char **buffer ){    
     printf("Reading file\n");
     FILE *f;
-    f = fopen(filename, "w+");
+    f = fopen(filename, "r");
+    if(f == NULL)
+	printf("CAN'T READ FILE!\n\n");
     printf("File opened\n");
     // https://stackoverflow.com/questions/238603/how-can-i-get-a-files-size-in-c
-    // fseek(f, 0L, SEEK_END); // seek to end of file 
-    // int size = ftell(f); // get current file pointer
-    // printf("size %i \n", size);
-    // rewind(f);
-
-    struct stat st;
-    stat(filename, &st);
-    int size = st.st_size;
+    fseek(f, 0L, SEEK_END); // seek to end of file 
+    int size = ftell(f); // get current file pointer
     printf("size %i \n", size);
+    rewind(f);
 
-    char *file_str = (char *)malloc( 8*sizeof(char) );
+    //struct stat st;
+    //stat(filename, &st);
+    //int size = st.st_size;
+    //printf("size %i \n", size);
+
+    char *file_str = (char *)malloc( size * sizeof(char) );
     
-    fgets(file_str, 8*sizeof(char), f);
+    fread(file_str, size, 1, f);
     printf("Created file string:\n %s\n", file_str);
     printf("put file into string \n");
 
@@ -37,7 +39,7 @@ int read_file( char* filename, char **buffer ){
     while (token != NULL){
         printf("tokenizing... \n");
         token = strtok(file_str, ",");
-        // buffer[i] = (char *)malloc(strlen(token));
+        //buffer[i] = (char *)malloc(strlen(token));
         buffer[r] = token;
         printf("%s \n", buffer[r]);
         r++;

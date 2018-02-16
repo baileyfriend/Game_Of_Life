@@ -36,7 +36,7 @@ int main(int argc,char* argv[]) {
     printf("num rows: %i   num cols: %i \n", num_rows, num_cols);
     // Create board
     printf("create board \n");
-    char **board = (char **)malloc(num_rows*sizeof(char));
+    char **board = (char **)malloc(num_rows*sizeof(char*));
     create_board(board, num_rows, num_cols);
     printf("board created \n");
     // populate initial board
@@ -72,7 +72,7 @@ int main(int argc,char* argv[]) {
             write_file( file, board, num_rows, num_cols );
 
         } else if( strcmp(input, "load\n\0") == 0 ){
-            char *filename = "some_file.txt";
+            char *filename = "some_file.txt\0";
             //printf("What file (must be in this directory)? \n"); // @TODO implement load function
             //fgets(filename, 50, stdin);
             //char **data = 
